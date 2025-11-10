@@ -39,7 +39,7 @@ async fn get_all_pets(data: web::Data<Arc<AppState>>) -> impl Responder {
     match data.storage.get_all_pets() {
         Ok(pets) => HttpResponse::Ok().json(pets),
         Err(e) => HttpResponse::InternalServerError().json(ErrorResponse {
-            error: e.to_string(),
+            error: e,
         }),
     }
 }
@@ -50,10 +50,10 @@ async fn get_pet(data: web::Data<Arc<AppState>>, path: web::Path<u64>) -> impl R
     match data.storage.get_pet(id) {
         Ok(Some(pet)) => HttpResponse::Ok().json(pet),
         Ok(None) => HttpResponse::NotFound().json(ErrorResponse {
-            error: format!("Pet with ID {} not found", id),
+            error: format!("Pet with ID {id} not found"),
         }),
         Err(e) => HttpResponse::InternalServerError().json(ErrorResponse {
-            error: e.to_string(),
+            error: e,
         }),
     }
 }
@@ -69,7 +69,7 @@ async fn create_pet(
     {
         Ok(pet) => HttpResponse::Created().json(pet),
         Err(e) => HttpResponse::InternalServerError().json(ErrorResponse {
-            error: e.to_string(),
+            error: e,
         }),
     }
 }
@@ -87,10 +87,10 @@ async fn update_pet(
     {
         Ok(Some(pet)) => HttpResponse::Ok().json(pet),
         Ok(None) => HttpResponse::NotFound().json(ErrorResponse {
-            error: format!("Pet with ID {} not found", id),
+            error: format!("Pet with ID {id} not found"),
         }),
         Err(e) => HttpResponse::InternalServerError().json(ErrorResponse {
-            error: e.to_string(),
+            error: e,
         }),
     }
 }
@@ -101,10 +101,10 @@ async fn delete_pet(data: web::Data<Arc<AppState>>, path: web::Path<u64>) -> imp
     match data.storage.delete_pet(id) {
         Ok(true) => HttpResponse::NoContent().finish(),
         Ok(false) => HttpResponse::NotFound().json(ErrorResponse {
-            error: format!("Pet with ID {} not found", id),
+            error: format!("Pet with ID {id} not found"),
         }),
         Err(e) => HttpResponse::InternalServerError().json(ErrorResponse {
-            error: e.to_string(),
+            error: e,
         }),
     }
 }
@@ -120,37 +120,37 @@ async fn main() -> std::io::Result<()> {
     let app_state = Arc::new(AppState { storage });
 
     // Register service with Consul in a blocking task
-    let consul_address_clone = consul_address.to_string();
-    let host_clone = host.to_string();
+    let consul_address_clone = consul_address.to_owned();
+    let host_clone = host.to_owned();
     let port_clone = port;
 
     tokio::task::spawn_blocking(move || {
         let consul_client = ConsulClient::new(&consul_address_clone);
         let registration = ServiceRegistration {
-            id: "pet-service-1".to_string(),
-            name: "pet-service".to_string(),
-            tags: vec!["pets".to_string(), "rest".to_string(), "api".to_string()],
+            id: "pet-service-1".to_owned(),
+            name: "pet-service".to_owned(),
+            tags: vec!["pets".to_owned(), "rest".to_owned(), "api".to_owned()],
             address: host_clone.clone(),
             port: port_clone,
             check: Some(ServiceCheck {
-                http: format!("http://{}:{}/health", host_clone, port_clone),
-                interval: "10s".to_string(),
-                timeout: "5s".to_string(),
+                http: format!("http://{host_clone}:{port_clone}/health"),
+                interval: "10s".to_owned(),
+                timeout: "5s".to_owned(),
             }),
         };
 
         match consul_client.register_service(&registration) {
-            Ok(_) => println!("Successfully registered service with Consul"),
-            Err(e) => eprintln!("Warning: Failed to register with Consul: {}", e),
+            Ok(()) => println!("Successfully registered service with Consul"),
+            Err(e) => eprintln!("Warning: Failed to register with Consul: {e}"),
         }
     });
 
-    println!("Starting Pet Service on {}:{}", host, port);
+    println!("Starting Pet Service on {host}:{port}");
 
     // Start HTTP server
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(app_state.clone()))
+            .app_data(web::Data::new(Arc::clone(&app_state)))
             .route("/health", web::get().to(health_check))
             .route("/pets", web::get().to(get_all_pets))
             .route("/pets/{id}", web::get().to(get_pet))
