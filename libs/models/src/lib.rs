@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Pet {
     pub id: u64,
     pub name: String,
@@ -9,8 +9,9 @@ pub struct Pet {
 }
 
 impl Pet {
-    pub fn new(id: u64, name: String, species: String, age: u32) -> Self {
-        Pet {
+    #[must_use]
+    pub const fn new(id: u64, name: String, species: String, age: u32) -> Self {
+        Self {
             id,
             name,
             species,
