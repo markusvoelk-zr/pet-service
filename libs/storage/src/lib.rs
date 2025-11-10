@@ -75,7 +75,7 @@ mod tests {
     fn test_add_and_get_pet() {
         let storage = PetStorage::new();
         let pet = storage
-            .add_pet("Fluffy".to_string(), "Cat".to_string(), 3)
+            .add_pet("Fluffyy".to_string(), "Cat".to_string(), 3)
             .unwrap();
         assert_eq!(pet.id, 1);
         assert_eq!(pet.name, "Fluffy");
