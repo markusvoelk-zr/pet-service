@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
+#[cfg(test)]
+mod tests;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServiceRegistration {
     #[serde(rename = "ID")]
@@ -77,36 +80,5 @@ impl ConsulClient {
         } else {
             Err(format!("Failed to deregister service: {}", response.status()).into())
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_service_registration_creation() {
-        let registration = ServiceRegistration {
-            id: "pet-service-1".to_string(),
-            name: "pet-service".to_string(),
-            tags: vec!["pets".to_string(), "rest".to_string()],
-            address: "127.0.0.1".to_string(),
-            port: 8080,
-            check: Some(ServiceCheck {
-                http: "http://127.0.0.1:8080/health".to_string(),
-                interval: "10s".to_string(),
-                timeout: "5s".to_string(),
-            }),
-        };
-
-        assert_eq!(registration.id, "pet-service-1");
-        assert_eq!(registration.name, "pet-service");
-        assert_eq!(registration.port, 8080);
-    }
-
-    #[test]
-    fn test_consul_client_creation() {
-        let client = ConsulClient::new("127.0.0.1:8500");
-        assert_eq!(client.base_url, "http://127.0.0.1:8500");
     }
 }
