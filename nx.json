@@ -6,5 +6,6 @@
     "production": ["default"],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "plugins": ["@monodon/rust"]
+  "plugins": ["@monodon/rust"],
+  "nxCloudId": "6911df7f7aa2651e386733a4"
 }
