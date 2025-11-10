@@ -78,10 +78,10 @@ mod tests {
             .add_pet("Fluffyy".to_string(), "Cat".to_string(), 3)
             .unwrap();
         assert_eq!(pet.id, 1);
-        assert_eq!(pet.name, "Fluffy");
+        assert_eq!(pet.name, "Fluffyy");
 
         let retrieved = storage.get_pet(1).unwrap().unwrap();
-        assert_eq!(retrieved.name, "Fluffy");
+        assert_eq!(retrieved.name, "Fluffyy");
     }
 
     #[test]
