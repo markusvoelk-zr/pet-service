@@ -33,13 +33,19 @@ pub struct ConsulClient {
 }
 
 impl ConsulClient {
+    #[must_use]
     pub fn new(consul_address: &str) -> Self {
-        ConsulClient {
-            base_url: format!("http://{}", consul_address),
+        Self {
+            base_url: format!("http://{consul_address}"),
             client: reqwest::blocking::Client::new(),
         }
     }
 
+    /// Registers a service with Consul.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the HTTP request fails or if Consul returns a non-success status.
     pub fn register_service(
         &self,
         registration: &ServiceRegistration,
@@ -54,6 +60,11 @@ impl ConsulClient {
         }
     }
 
+    /// Deregisters a service from Consul.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the HTTP request fails or if Consul returns a non-success status.
     pub fn deregister_service(&self, service_id: &str) -> Result<(), Box<dyn Error>> {
         let url = format!(
             "{}/v1/agent/service/deregister/{}",
