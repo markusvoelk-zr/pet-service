@@ -6,6 +6,13 @@
     "production": ["default"],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
+  "targetDefaults": {
+    "lint": {
+      "options": {
+        "args": "-D warnings"
+      }
+    }
+  },
   "plugins": ["@monodon/rust"],
   "nxCloudId": "6911df7f7aa2651e386733a4"
 }
