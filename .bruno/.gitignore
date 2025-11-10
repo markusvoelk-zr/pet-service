@@ -1,0 +1,18 @@
+# Bruno runtime files
+.env
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+node_modules/
+.nx/
+dist/
+target/

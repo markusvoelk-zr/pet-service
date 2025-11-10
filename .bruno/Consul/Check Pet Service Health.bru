@@ -1,0 +1,40 @@
+meta {
+  name: Check Pet Service Health
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{consulUrl}}/v1/agent/health/service/name/pet-service
+  body: none
+  auth: none
+}
+
+docs {
+  Checks the health status of the pet-service as reported by Consul.
+  
+  This requires:
+  1. Consul server running at 127.0.0.1:8500
+  2. Pet service registered with Consul
+  3. Pet service health endpoint responding
+  
+  The health check polls the /health endpoint of the pet service.
+}
+
+tests {
+  test("should return status code indicating health", function() {
+    // 200 = passing, 429 = warning, 503 = critical
+    expect([200, 429, 503]).to.include(res.status);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should have aggregated status", function() {
+    if (Array.isArray(res.body) && res.body.length > 0) {
+      expect(res.body[0]).to.have.property('AggregatedStatus');
+      expect(res.body[0]).to.have.property('Service');
+    }
+  });
+}

@@ -1,0 +1,41 @@
+meta {
+  name: Get All Pets
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/pets
+  body: none
+  auth: none
+}
+
+docs {
+  Retrieves a list of all pets from the in-memory storage.
+  
+  Returns an array of pet objects. Initially empty until pets are created.
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should return an array", function() {
+    expect(res.body).to.be.an('array');
+  });
+  
+  test("each pet should have required fields", function() {
+    if (res.body.length > 0) {
+      const pet = res.body[0];
+      expect(pet).to.have.property('id');
+      expect(pet).to.have.property('name');
+      expect(pet).to.have.property('species');
+      expect(pet).to.have.property('age');
+    }
+  });
+}

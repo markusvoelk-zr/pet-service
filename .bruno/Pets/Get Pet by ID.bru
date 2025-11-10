@@ -1,0 +1,45 @@
+meta {
+  name: Get Pet by ID
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/pets/{{petId}}
+  body: none
+  auth: none
+}
+
+docs {
+  Retrieves a specific pet by its ID.
+  
+  Uses the petId variable that was set by the "Create Pet" request.
+  
+  Returns:
+  - 200: Pet found with pet details
+  - 404: Pet not found
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should return the pet", function() {
+    expect(res.body).to.have.property('id');
+    expect(res.body).to.have.property('name');
+    expect(res.body).to.have.property('species');
+    expect(res.body).to.have.property('age');
+  });
+  
+  test("should have correct ID", function() {
+    const expectedId = parseInt(bru.getVar("petId"));
+    if (!isNaN(expectedId)) {
+      expect(res.body.id).to.equal(expectedId);
+    }
+  });
+}

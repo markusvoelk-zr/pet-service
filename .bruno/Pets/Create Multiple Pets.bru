@@ -1,0 +1,40 @@
+meta {
+  name: Create Multiple Pets
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/pets
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Buddy",
+    "species": "Dog",
+    "age": 5
+  }
+}
+
+docs {
+  Creates another pet for testing multiple records.
+  
+  This demonstrates the ability to store multiple pets.
+}
+
+tests {
+  test("should return 201 status", function() {
+    expect(res.status).to.equal(201);
+  });
+  
+  test("should return created pet", function() {
+    expect(res.body).to.have.property('id');
+    expect(res.body.name).to.equal('Buddy');
+  });
+}

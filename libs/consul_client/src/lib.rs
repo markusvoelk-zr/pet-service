@@ -1,0 +1,101 @@
+use serde::{Deserialize, Serialize};
+use std::error::Error;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ServiceRegistration {
+    #[serde(rename = "ID")]
+    pub id: String,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "Tags")]
+    pub tags: Vec<String>,
+    #[serde(rename = "Address")]
+    pub address: String,
+    #[serde(rename = "Port")]
+    pub port: u16,
+    #[serde(rename = "Check", skip_serializing_if = "Option::is_none")]
+    pub check: Option<ServiceCheck>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ServiceCheck {
+    #[serde(rename = "HTTP")]
+    pub http: String,
+    #[serde(rename = "Interval")]
+    pub interval: String,
+    #[serde(rename = "Timeout")]
+    pub timeout: String,
+}
+
+pub struct ConsulClient {
+    base_url: String,
+    client: reqwest::blocking::Client,
+}
+
+impl ConsulClient {
+    pub fn new(consul_address: &str) -> Self {
+        ConsulClient {
+            base_url: format!("http://{}", consul_address),
+            client: reqwest::blocking::Client::new(),
+        }
+    }
+
+    pub fn register_service(
+        &self,
+        registration: &ServiceRegistration,
+    ) -> Result<(), Box<dyn Error>> {
+        let url = format!("{}/v1/agent/service/register", self.base_url);
+        let response = self.client.put(&url).json(registration).send()?;
+
+        if response.status().is_success() {
+            Ok(())
+        } else {
+            Err(format!("Failed to register service: {}", response.status()).into())
+        }
+    }
+
+    pub fn deregister_service(&self, service_id: &str) -> Result<(), Box<dyn Error>> {
+        let url = format!(
+            "{}/v1/agent/service/deregister/{}",
+            self.base_url, service_id
+        );
+        let response = self.client.put(&url).send()?;
+
+        if response.status().is_success() {
+            Ok(())
+        } else {
+            Err(format!("Failed to deregister service: {}", response.status()).into())
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_service_registration_creation() {
+        let registration = ServiceRegistration {
+            id: "pet-service-1".to_string(),
+            name: "pet-service".to_string(),
+            tags: vec!["pets".to_string(), "rest".to_string()],
+            address: "127.0.0.1".to_string(),
+            port: 8080,
+            check: Some(ServiceCheck {
+                http: "http://127.0.0.1:8080/health".to_string(),
+                interval: "10s".to_string(),
+                timeout: "5s".to_string(),
+            }),
+        };
+
+        assert_eq!(registration.id, "pet-service-1");
+        assert_eq!(registration.name, "pet-service");
+        assert_eq!(registration.port, 8080);
+    }
+
+    #[test]
+    fn test_consul_client_creation() {
+        let client = ConsulClient::new("127.0.0.1:8500");
+        assert_eq!(client.base_url, "http://127.0.0.1:8500");
+    }
+}

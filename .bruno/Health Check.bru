@@ -1,0 +1,35 @@
+meta {
+  name: Health Check
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+docs {
+  Health check endpoint for service monitoring and Consul health checks.
+  
+  Returns a JSON response with the service health status.
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should have status field", function() {
+    expect(res.body.status).to.be.a('string');
+  });
+  
+  test("should be healthy", function() {
+    expect(res.body.status).to.equal('healthy');
+  });
+}

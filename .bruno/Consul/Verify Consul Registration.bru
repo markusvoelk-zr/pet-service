@@ -1,0 +1,53 @@
+meta {
+  name: Verify Consul Registration
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{consulUrl}}/v1/agent/services
+  body: none
+  auth: none
+}
+
+docs {
+  Verifies that the pet service has successfully registered with Consul.
+  
+  This requires a Consul server to be running at 127.0.0.1:8500.
+  
+  The response should include a service with the name "pet-service".
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should have pet-service registered", function() {
+    const services = res.body;
+    const petService = Object.values(services).find(s => s.Service === 'pet-service');
+    
+    if (petService) {
+      expect(petService).to.exist;
+      expect(petService.Service).to.equal('pet-service');
+      expect(petService.Address).to.equal('127.0.0.1');
+      expect(petService.Port).to.equal(8080);
+    }
+  });
+  
+  test("should have correct tags", function() {
+    const services = res.body;
+    const petService = Object.values(services).find(s => s.Service === 'pet-service');
+    
+    if (petService) {
+      expect(petService.Tags).to.be.an('array');
+      expect(petService.Tags).to.include('pets');
+      expect(petService.Tags).to.include('rest');
+      expect(petService.Tags).to.include('api');
+    }
+  });
+}

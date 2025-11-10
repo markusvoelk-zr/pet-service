@@ -1,0 +1,31 @@
+meta {
+  name: Delete Pet
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/pets/{{petId}}
+  body: none
+  auth: none
+}
+
+docs {
+  Deletes a pet from the storage.
+  
+  Uses the petId variable from the "Create Pet" request.
+  
+  Returns:
+  - 204: Pet deleted successfully (no content)
+  - 404: Pet not found
+}
+
+tests {
+  test("should return 204 status", function() {
+    expect(res.status).to.equal(204);
+  });
+  
+  test("should have no content", function() {
+    expect(res.body).to.be.undefined;
+  });
+}

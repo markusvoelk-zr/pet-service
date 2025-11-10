@@ -1,0 +1,51 @@
+docs {
+  # Pet Service API Collection
+  
+  A comprehensive API testing collection for the Pet Service REST API built with Rust, Actix-Web, and Consul integration.
+  
+  ## Features
+  
+  - Complete CRUD operations for pet management
+  - Health check endpoint testing
+  - Error handling validation (404s)
+  - Consul service registration verification
+  - Automated test assertions
+  - Request chaining with variables
+  
+  ## Getting Started
+  
+  1. Start the pet service: `npx nx run web_service`
+  2. (Optional) Start Consul: `consul agent -dev`
+  3. Select "Local" environment
+  4. Run requests in sequence or use "Run Collection"
+  
+  ## API Endpoints
+  
+  - GET /health - Health check
+  - GET /pets - List all pets
+  - POST /pets - Create pet
+  - GET /pets/{id} - Get pet by ID
+  - PUT /pets/{id} - Update pet
+  - DELETE /pets/{id} - Delete pet
+  
+  ## Variables
+  
+  - baseUrl: Service base URL (http://127.0.0.1:8080)
+  - consulUrl: Consul URL (http://127.0.0.1:8500)
+  - petId: Auto-populated by Create Pet request
+  
+  ## Test Flow
+  
+  The requests are numbered and should be run in sequence for best results:
+  1. Health Check
+  2. Get All Pets (empty)
+  3. Create Pet (saves ID)
+  4. Create Multiple Pets
+  5. Get Pet by ID
+  6. Update Pet
+  7. Delete Pet
+  8-10. Error handling tests
+  11-12. Consul integration tests
+  
+  For detailed documentation, see the README.md file in this collection.
+}

@@ -1,0 +1,12 @@
+
+[workspace]
+resolver = '2'
+members = [
+	'libs/models',
+	'libs/storage',
+	'libs/consul_client',
+	'apps/web_service',
+]
+
+[profile.release]
+lto = true

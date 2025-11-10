@@ -1,0 +1,68 @@
+meta {
+  name: Update Pet
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/pets/{{petId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Fluffy Jr.",
+    "species": "Cat",
+    "age": 4
+  }
+}
+
+docs {
+  Updates an existing pet's information.
+  
+  Uses the petId variable from the "Create Pet" request.
+  
+  Request Body:
+  - name (string): Updated pet name
+  - species (string): Updated species
+  - age (number): Updated age
+  
+  Returns:
+  - 200: Pet updated successfully
+  - 404: Pet not found
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should return updated pet", function() {
+    expect(res.body).to.have.property('id');
+    expect(res.body).to.have.property('name');
+    expect(res.body).to.have.property('species');
+    expect(res.body).to.have.property('age');
+  });
+  
+  test("should have updated values", function() {
+    expect(res.body.name).to.equal('Fluffy Jr.');
+    expect(res.body.species).to.equal('Cat');
+    expect(res.body.age).to.equal(4);
+  });
+  
+  test("should preserve ID", function() {
+    const expectedId = parseInt(bru.getVar("petId"));
+    if (!isNaN(expectedId)) {
+      expect(res.body.id).to.equal(expectedId);
+    }
+  });
+}

@@ -1,0 +1,32 @@
+meta {
+  name: Delete Nonexistent Pet
+  type: http
+  seq: 10
+}
+
+delete {
+  url: {{baseUrl}}/pets/999999
+  body: none
+  auth: none
+}
+
+docs {
+  Tests error handling when trying to delete a pet that doesn't exist.
+  
+  Should return a 404 Not Found status.
+}
+
+tests {
+  test("should return 404 status", function() {
+    expect(res.status).to.equal(404);
+  });
+  
+  test("should return JSON response", function() {
+    expect(res.headers['content-type']).to.include('application/json');
+  });
+  
+  test("should have error message", function() {
+    expect(res.body).to.have.property('error');
+    expect(res.body.error).to.include('not found');
+  });
+}
