@@ -17,7 +17,7 @@
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
   "targetDefaults": {
-    "lint": {
+    "@monodon/rust:lint": {
       "options": {
         "args": "-D warnings"
       }
