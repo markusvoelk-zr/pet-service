@@ -9,7 +9,12 @@ export interface PetFormProps {
   onCancel: () => void;
 }
 
-export function PetForm({ editingPet, loading, onSubmit, onCancel }: PetFormProps) {
+export function PetForm({
+  editingPet,
+  loading,
+  onSubmit,
+  onCancel,
+}: PetFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     species: '',
@@ -67,7 +72,9 @@ export function PetForm({ editingPet, loading, onSubmit, onCancel }: PetFormProp
             type="text"
             id="species"
             value={formData.species}
-            onChange={(e) => setFormData({ ...formData, species: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, species: e.target.value })
+            }
             required
             disabled={loading}
           />

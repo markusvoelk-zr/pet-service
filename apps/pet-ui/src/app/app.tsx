@@ -28,7 +28,9 @@ export function App() {
     fetchPets();
   }, []);
 
-  const handleSubmit = async (pet: Pet | { name: string; species: string; age: number }) => {
+  const handleSubmit = async (
+    pet: Pet | { name: string; species: string; age: number }
+  ) => {
     try {
       setLoading(true);
       setError(null);

@@ -6,9 +6,14 @@ describe('PetList', () => {
   it('should render successfully with empty list', () => {
     const mockOnEdit = vi.fn();
     const mockOnDelete = vi.fn();
-    
+
     const { getByText } = render(
-      <PetList pets={[]} loading={false} onEdit={mockOnEdit} onDelete={mockOnDelete} />
+      <PetList
+        pets={[]}
+        loading={false}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+      />
     );
     expect(getByText('Pet List')).toBeTruthy();
     expect(getByText('No pets found. Add one above!')).toBeTruthy();
@@ -21,9 +26,14 @@ describe('PetList', () => {
     ];
     const mockOnEdit = vi.fn();
     const mockOnDelete = vi.fn();
-    
+
     const { getByText } = render(
-      <PetList pets={mockPets} loading={false} onEdit={mockOnEdit} onDelete={mockOnDelete} />
+      <PetList
+        pets={mockPets}
+        loading={false}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+      />
     );
     expect(getByText('Fluffy')).toBeTruthy();
     expect(getByText('Rex')).toBeTruthy();
@@ -32,9 +42,14 @@ describe('PetList', () => {
   it('should show loading state', () => {
     const mockOnEdit = vi.fn();
     const mockOnDelete = vi.fn();
-    
+
     const { getByText } = render(
-      <PetList pets={[]} loading={true} onEdit={mockOnEdit} onDelete={mockOnDelete} />
+      <PetList
+        pets={[]}
+        loading={true}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+      />
     );
     expect(getByText('Loading...')).toBeTruthy();
   });
