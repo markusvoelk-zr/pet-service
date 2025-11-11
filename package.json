@@ -5,9 +5,12 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "@monodon/rust": "2.3.0"
+    "@monodon/rust": "2.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@nx/react": "^22.0.2",
     "@nx/workspace": "22.0.2",
     "nx": "22.0.2"
   }
