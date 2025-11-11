@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{App, HttpServer, web};
 use consul_client::{ConsulClient, ServiceCheck, ServiceRegistration};
 use std::sync::Arc;
@@ -10,7 +11,7 @@ use crate::routes::{
 mod routes;
 
 const HOST: &str = "127.0.0.1";
-const PORT: u16 = 8081;
+const PORT: u16 = 8080;
 const CONSUL_ADDRESS: &str = "127.0.0.1:8500";
 
 #[actix_web::main]
@@ -44,7 +45,17 @@ async fn main() -> std::io::Result<()> {
 
     // Start HTTP server
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:4200")
+            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
+            .allowed_headers(vec![
+                actix_web::http::header::CONTENT_TYPE,
+                actix_web::http::header::ACCEPT,
+            ])
+            .max_age(3600);
+
         App::new()
+            .wrap(cors)
             .app_data(web::Data::new(Arc::clone(&app_state)))
             .route("/health", web::get().to(health_check))
             .route("/pets", web::get().to(get_all_pets))

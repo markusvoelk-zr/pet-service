@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@pet-service/pet-types": ["libs/pet-types/src/index.ts"],
+      "@pet-service/pet-api": ["libs/pet-api/src/index.ts"],
+      "@pet-service/pet-form": ["libs/pet-form/src/index.ts"],
+      "@pet-service/pet-list": ["libs/pet-list/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
