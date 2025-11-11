@@ -5,7 +5,7 @@ import NxWelcome from './nx-welcome';
 export function App() {
   return (
     <div>
-      <NxWelcome title="pet-ui" />
+      <NxWelcome title="We ♡ pets" />
     </div>
   );
 }
