@@ -10,7 +10,7 @@ use crate::routes::{
 mod routes;
 
 const HOST: &str = "127.0.0.1";
-const PORT: u16 = 8081;
+const PORT: u16 = 8080;
 const CONSUL_ADDRESS: &str = "127.0.0.1:8500";
 
 #[actix_web::main]
