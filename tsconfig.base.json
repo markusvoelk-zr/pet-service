@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@pet-service/pet-types": ["libs/pet-types/src/index.ts"],
+      "@pet-service/pet-api": ["libs/pet-api/src/index.ts"],
+      "@pet-service/pet-form": ["libs/pet-form/src/index.ts"],
+      "@pet-service/pet-list": ["libs/pet-list/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
