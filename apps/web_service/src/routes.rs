@@ -11,13 +11,6 @@ pub struct CreatePetRequest {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UpdatePetRequest {
-    name: String,
-    species: String,
-    age: u32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 struct ErrorResponse {
     error: String,
 }
@@ -63,25 +56,6 @@ pub async fn create_pet(
         .add_pet(req.name.clone(), req.species.clone(), req.age)
     {
         Ok(pet) => HttpResponse::Created().json(pet),
-        Err(e) => HttpResponse::InternalServerError().json(ErrorResponse { error: e }),
-    }
-}
-
-// PUT /pets/{id} - Update a pet
-pub async fn update_pet(
-    data: web::Data<Arc<AppState>>,
-    path: web::Path<u64>,
-    req: web::Json<UpdatePetRequest>,
-) -> impl Responder {
-    let id = path.into_inner();
-    match data
-        .storage
-        .update_pet(id, req.name.clone(), req.species.clone(), req.age)
-    {
-        Ok(Some(pet)) => HttpResponse::Ok().json(pet),
-        Ok(None) => HttpResponse::NotFound().json(ErrorResponse {
-            error: format!("Pet with ID {id} not found"),
-        }),
         Err(e) => HttpResponse::InternalServerError().json(ErrorResponse { error: e }),
     }
 }

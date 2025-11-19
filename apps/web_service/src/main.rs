@@ -4,7 +4,7 @@ use std::sync::Arc;
 use storage::PetStorage;
 
 use crate::routes::{
-    AppState, create_pet, delete_pet, get_all_pets, get_pet, health_check, update_pet,
+    AppState, create_pet, delete_pet, get_all_pets, get_pet, health_check,
 };
 
 mod routes;
@@ -50,7 +50,6 @@ async fn main() -> std::io::Result<()> {
             .route("/pets", web::get().to(get_all_pets))
             .route("/pets/{id}", web::get().to(get_pet))
             .route("/pets", web::post().to(create_pet))
-            .route("/pets/{id}", web::put().to(update_pet))
             .route("/pets/{id}", web::delete().to(delete_pet))
     })
     .bind((HOST, PORT))?
