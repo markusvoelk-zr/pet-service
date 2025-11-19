@@ -4,13 +4,6 @@
   "projectType": "library",
   "sourceRoot": "libs/consul_client/src",
   "targets": {
-    "build": {
-      "executor": "@monodon/rust:check",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "dist/target/consul_client"
-      }
-    },
     "test": {
       "cache": true,
       "executor": "@monodon/rust:test",
