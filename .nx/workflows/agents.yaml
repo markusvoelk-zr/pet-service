@@ -1,0 +1,44 @@
+# Define common setup steps that can be reused across templates
+common-rust-js-init-steps: &common-rust-js-init-steps
+  # using a reusable step in an external GitHub repo,
+  # this step is provided by Nx Cloud: https://github.com/nrwl/nx-cloud-workflows/tree/main/workflow-steps
+  - name: Checkout
+    uses: 'nrwl/nx-cloud-workflows/v5/workflow-steps/checkout/main.yaml'
+
+  # add Node.js-specific steps
+  - name: Restore Node Modules Cache
+    uses: 'nrwl/nx-cloud-workflows/v5/workflow-steps/cache/main.yaml'
+    # the cache step requires configuration via env vars
+    # https://github.com/nrwl/nx-cloud-workflows/tree/main/workflow-steps/cache#options
+    inputs:
+      # Include patches directories to ensure cache is busted when patches change
+      # If you use a custom patches directory, add it to the key as well
+      key: 'package-lock.json|yarn.lock|pnpm-lock.yaml|patches/**|.yarn/patches/**'
+      paths: |
+        ~/.npm
+        # or ~/.cache/yarn
+        # or .pnpm-store
+      base-branch: 'main'
+  - name: Install Node Modules
+    uses: 'nrwl/nx-cloud-workflows/v5/workflow-steps/install-node-modules/main.yaml'
+    
+  # add Rust-specific steps
+  - name: Install System Dependencies
+    script: |
+      sudo apt-get update
+      sudo apt-get install -y pkg-config libssl-dev
+      # Set PKG_CONFIG_PATH to help find openssl.pc
+      echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig" >> $NX_CLOUD_ENV
+  - name: Install Rust
+    script: |
+      curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
+      source "$HOME/.cargo/env"
+      rustup toolchain install stable
+      # persist cargo bin into PATH
+      echo "PATH=$HOME/.cargo/bin:$PATH" >> $NX_CLOUD_ENV
+
+launch-templates:
+  my-linux-medium-rust-js:
+    resource-class: 'docker_linux_amd64/medium'
+    image: 'ubuntu22.04-node20.11-v9'
+    init-steps: *common-rust-js-init-steps
