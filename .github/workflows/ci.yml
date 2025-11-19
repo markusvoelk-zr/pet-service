@@ -18,7 +18,6 @@ jobs:
         with:
           filter: tree:0
           fetch-depth: 0
-      - uses: Swatinem/rust-cache@v2
 
       - uses: actions/setup-node@v4
         with:
@@ -26,7 +25,10 @@ jobs:
           cache: "npm"
 
       - run: npm ci
+
       - uses: nrwl/nx-set-shas@v4
+
+      - run: npx nx-cloud start-ci-run --distribute-on="3 my-linux-medium-rust-js" --stop-agents-after="build"
 
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
       # - run: npx nx-cloud record -- echo Hello World
