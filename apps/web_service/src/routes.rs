@@ -11,13 +11,6 @@ pub struct CreatePetRequest {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UpdatePetRequest {
-    name: String,
-    species: String,
-    age: u32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 struct ErrorResponse {
     error: String,
 }
