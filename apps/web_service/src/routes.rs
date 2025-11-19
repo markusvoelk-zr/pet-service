@@ -67,25 +67,6 @@ pub async fn create_pet(
     }
 }
 
-// PUT /pets/{id} - Update a pet
-pub async fn update_pet(
-    data: web::Data<Arc<AppState>>,
-    path: web::Path<u64>,
-    req: web::Json<UpdatePetRequest>,
-) -> impl Responder {
-    let id = path.into_inner();
-    match data
-        .storage
-        .update_pet(id, req.name.clone(), req.species.clone(), req.age)
-    {
-        Ok(Some(pet)) => HttpResponse::Ok().json(pet),
-        Ok(None) => HttpResponse::NotFound().json(ErrorResponse {
-            error: format!("Pet with ID {id} not found"),
-        }),
-        Err(e) => HttpResponse::InternalServerError().json(ErrorResponse { error: e }),
-    }
-}
-
 // DELETE /pets/{id} - Delete a pet
 pub async fn delete_pet(data: web::Data<Arc<AppState>>, path: web::Path<u64>) -> impl Responder {
     let id = path.into_inner();
