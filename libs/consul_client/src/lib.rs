@@ -4,6 +4,8 @@ use std::error::Error;
 #[cfg(test)]
 mod tests;
 
+// Just a change for triggering CI
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServiceRegistration {
     #[serde(rename = "ID")]
